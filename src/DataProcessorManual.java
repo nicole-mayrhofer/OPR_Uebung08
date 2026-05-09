@@ -76,14 +76,32 @@ public class DataProcessorManual {
         if (hardDisks.isEmpty()) return -1;     // default for empty lists
 
         hardDisks.sort(sortingComparator);
-        long med = 0;
-        HardDisk hd = hardDisks.get(hardDisks.size() / 2);
 
-        if (hardDisks.size() % 2 == 0) {                  // ungerade anzahl an elementen
-        hd += (hardDisks.get(hardDisks.size()/2) + hardDisks.get(hardDisks.size()/2 - 1));
+        int size = hardDisks.size();
+        int mid = size / 2;
+
+        if (size % 2 == 1) {
+            // ungerade Anzahl
+            return function.apply(hardDisks.get(mid));
+        } else {
+            // gerade Anzahl → Mittelwert der beiden mittleren Elemente
+            long v1 = function.apply(hardDisks.get(mid - 1));
+            long v2 = function.apply(hardDisks.get(mid));
+            return (v1 + v2) / 2;
         }
-        return function.apply(hd);
     }
 // Counts distinct values based on the given HardDisk-to-String mapping function
-    public long countDistinctStrings(Function<HardDisk, String> function) { ... }
+    public long countDistinctStrings(Function<HardDisk, String> function) {
+
+        Vector<String> distinctStrings = new Vector<>();
+
+        for (HardDisk hd : hardDisks) {
+            String value = function.apply(hd);
+
+            if (value == null) return -1;
+
+            distinctStrings.add(value);
+        }
+        return distinctStrings.size();
+        }
     }
