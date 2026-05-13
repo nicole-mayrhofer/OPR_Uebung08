@@ -73,17 +73,15 @@ public class DataProcessorManual {
     public long median(Comparator<HardDisk> sortingComparator, Function<HardDisk, Long> function) {
         if (hardDisks.isEmpty()) return -1;     // default for empty lists
 
-        Vector<HardDisk> hd = new Vector<>(hardDisks);
-        hardDisks.sort(sortingComparator);
+        Vector<HardDisk> hd = new Vector<>(hardDisks); // ← Kopie!
+        hd.sort(sortingComparator);                     // ← hd sortieren
 
         int size = hd.size();
         int mid = size / 2;
 
         if (size % 2 == 1) {
-            // ungerade Anzahl
             return function.apply(hd.get(mid));
         } else {
-            // gerade Anzahl → Mittelwert der beiden mittleren Elemente
             long v1 = function.apply(hd.get(mid - 1));
             long v2 = function.apply(hd.get(mid));
             return (v1 + v2) / 2;
