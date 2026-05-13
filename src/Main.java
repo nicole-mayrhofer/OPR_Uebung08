@@ -15,19 +15,11 @@ public class Main {
         return disks;
     }
 
-    private static void printHeader(String title) {
-        System.out.println("\n╔══════════════════════════════════════════╗");
-        System.out.printf("║  %-40s  ║%n", title);
-        System.out.println("╚══════════════════════════════════════════╝");
-    }
-
     private static double toTB(long bytes) {
         return bytes / 1_000_000_000_000.0;
     }
 
-    private static void printResults(String implName, DataProcessorStreams dp) {
-        printHeader(implName);
-
+    private static void printResults(DataProcessorStreams dp) {
         System.out.println("Anzahl Festplatten:           " + dp.count());
 
         long failing = dp.filter(hd -> hd.isFailing()).size();
@@ -57,11 +49,11 @@ public class Main {
 
         double meanSmart = dp.mean(hd -> (long) hd.getSmartValues().size());
         System.out.printf("Ø Anzahl SMART-Werte:         %.2f%n", meanSmart);
+
+        System.out.println();
     }
 
-    private static void printResults(String implName, DataProcessorManual dp) {
-        printHeader(implName);
-
+    private static void printResults(DataProcessorManual dp) {
         System.out.println("Anzahl Festplatten:           " + dp.count());
 
         long failing = dp.filter(hd -> hd.isFailing()).size();
@@ -91,6 +83,8 @@ public class Main {
 
         double meanSmart = dp.mean(hd -> (long) hd.getSmartValues().size());
         System.out.printf("Ø Anzahl SMART-Werte:         %.2f%n", meanSmart);
+
+        System.out.println();
     }
 
     public static void main(String[] args) {
@@ -101,8 +95,7 @@ public class Main {
 
         System.out.println("Daten geladen. Starte Auswertung ...");
 
-        printResults("DataProcessorStreams", new DataProcessorStreams(disksForStreams));
-        printResults("DataProcessorManual", new DataProcessorManual(disksForManual));
-
+        printResults(new DataProcessorStreams(disksForStreams));
+        printResults(new DataProcessorManual(disksForManual));
     }
 }
